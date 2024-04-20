@@ -17,17 +17,17 @@ This project involves creating an API to provide information about Thai movies, 
 * /movies/year/{year}
 
 5. Getting the list of movies in specific genres:
-* /movies/genre/{genre_id}
+* /movies/genre/{genre}
 
 6. Getting the list of movies popular among specific age groups:
 * /movies/age/{age}
 
 7. Getting the list of movies popular among specific genders:
-* /movies/gender/{gender_id}
-* /movies/gender/{gender_id}/age/{age}
+* /movies/gender/{gender}
+* /movies/gender/{gender}/age/{age}
 
 8. Getting the list of movies available on a specific application:
-* /movies/application/{application_id}
+* /movies/application/{application}
 
 9. Getting the list of movies starring specific actors:
 * /movies/actor/{actor_id}
