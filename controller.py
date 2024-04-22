@@ -19,59 +19,61 @@ pool = PooledDB(creator=pymysql,
 def get_movies():
     """Retrieve all movies."""
     with pool.connection() as conn, conn.cursor() as cursor:
-        cursor.execute("SELECT movie_id, title_th, title_en FROM Movies")
+        cursor.execute("SELECT movie_id, title_th, title_en FROM movies")
         movies = [models.Movie(*row) for row in cursor.fetchall()]
         if not movies:
             abort(404, description="Movies not found.")
         return movies
 
 
-def get_movie_detail(movie_id):
+def get_movie_information(movie_id):
     """Retrieve detailed information about a specific movie, including a list of actors, genres, and platforms."""
     with pool.connection() as conn, conn.cursor() as cursor:
+        cursor.execute("""
+            SELECT movie_id, title_th, title_en, release_year
+            FROM movies
+            WHERE movie_id = %s;
+        """, (movie_id,))
+        movie_data = cursor.fetchone()
+        if not movie_data:
+            abort(404, description="Movie not found")
+        movie_id, title_th, title_en, release_year = movie_data
 
         cursor.execute("""
-            SELECT movie_id, title_th, title_en, release_year 
-            FROM Movies 
-            WHERE movie_id = %s
+            SELECT a.actor_id, a.nickname_th, a.fullname_th, a.nickname_en, a.fullname_en
+            FROM actors a
+            JOIN play p ON p.actor_id = a.actor_id
+            WHERE p.movie_id = %s;
         """, (movie_id,))
-        movie = cursor.fetchone()
-
-        if not movie:
-            abort(404, description=f"Movie not found.")
+        actors = [models.Actor(*actor_data) for actor_data in cursor.fetchall()]
 
         cursor.execute("""
-            SELECT a.actor_id, a.nickname_th, a.fullname_th, a.nickname_en, a.fullname_en 
-            FROM Actors a 
-            JOIN Plays p ON p.actor_id = a.actor_id 
-            WHERE p.movie_id = %s
+            SELECT g.genre_id, g.genre_name
+            FROM genres g
+            JOIN moviegenre mg ON g.genre_id = mg.genre_id
+            WHERE mg.movie_id = %s;
         """, (movie_id,))
-        actors = [models.Actor(*actor_row) for actor_row in cursor.fetchall()]
+        genres = [models.Genre(*genre_data) for genre_data in cursor.fetchall()]
 
         cursor.execute("""
-            SELECT action, comedy, drama, romance, adventure, crime, fantasy, history, horror, mystery, scifi, thriller, other 
-            FROM Genres 
-            WHERE movie_id = %s
+            SELECT p.platform_id, p.platform_name
+            FROM platforms p
+            JOIN available a ON p.platform_id = a.platform_id
+            WHERE a.movie_id = %s;
         """, (movie_id,))
-        genre = models.Genre(*cursor.fetchone())
+        platforms = [models.Platform(*platform_data)
+                     for platform_data in cursor.fetchall()]
 
-        cursor.execute("""
-            SELECT youtube, 3ch_plus, prime_video, apple_tv, netflix 
-            FROM Platforms 
-            WHERE movie_id = %s
-        """, (movie_id,))
-        platforms = models.Platform(*cursor.fetchone())
-
-        detail_movie = models.DetailMovie(
-            movie_id=movie[0],
-            title_th=movie[1],
-            title_en=movie[2],
-            release_year=movie[3],
+        movie_info = models.MovieInformation(
+            movie_id=movie_id,
+            title_th=title_th,
+            title_en=title_en,
+            release_year=release_year,
             actors=actors,
-            genre=genre,
+            genres=genres,
             platforms=platforms
         )
-        return detail_movie
+        return movie_info
 
 
 def get_movies_by_actor(actor_id):
@@ -79,8 +81,8 @@ def get_movies_by_actor(actor_id):
     with pool.connection() as conn, conn.cursor() as cursor:
         cursor.execute("""
             SELECT DISTINCT m.movie_id, m.title_th, m.title_en 
-            FROM Movies m
-            JOIN Plays p ON m.movie_id = p.movie_id
+            FROM movies m
+            JOIN play p ON m.movie_id = p.movie_id
             WHERE p.actor_id = %s
         """, (actor_id,))
         movies = [models.Movie(*row) for row in cursor.fetchall()]
@@ -94,8 +96,8 @@ def get_movies_by_age(age):
     with pool.connection() as conn, conn.cursor() as cursor:
         cursor.execute("""
             SELECT DISTINCT m.movie_id, m.title_th, m.title_en 
-            FROM Movies m
-            JOIN Responses r ON m.movie_id = r.movie_id
+            FROM movies m
+            JOIN responses r ON m.movie_id = r.movie_id
             WHERE r.age = %s
         """, (age,))
         movies = [models.Movie(*row) for row in cursor.fetchall()]
@@ -109,8 +111,8 @@ def get_movies_by_gender(gender):
     with pool.connection() as conn, conn.cursor() as cursor:
         cursor.execute("""
             SELECT DISTINCT m.movie_id, m.title_th, m.title_en 
-            FROM Movies m
-            JOIN Responses r ON m.movie_id = r.movie_id
+            FROM movies m
+            JOIN responses r ON m.movie_id = r.movie_id
             WHERE r.gender = %s
         """, (gender,))
         movies = [models.Movie(*row) for row in cursor.fetchall()]
@@ -119,15 +121,15 @@ def get_movies_by_gender(gender):
         return movies
 
 
-def get_movies_by_genre(genre):
+def get_movies_by_genre(genre_id):
     """Retrieve all movies of a specific genre."""
     with pool.connection() as conn, conn.cursor() as cursor:
         cursor.execute("""
             SELECT DISTINCT m.movie_id, m.title_th, m.title_en 
-            FROM Movies m
-            JOIN Genres g ON m.movie_id = g.movie_id
-            WHERE g.%s = 1
-        """, (genre,))
+            FROM movies m
+            JOIN moviegenre mg ON m.movie_id = mg.movie_id
+            WHERE mg.genre_id = %s
+        """, (genre_id,))
         movies = [models.Movie(*row) for row in cursor.fetchall()]
         if not movies:
             abort(404, description="No movies found for the specified genre.")
@@ -139,7 +141,7 @@ def get_movies_by_year(year):
     with pool.connection() as conn, conn.cursor() as cursor:
         cursor.execute("""
             SELECT movie_id, title_th, title_en 
-            FROM Movies
+            FROM movies
             WHERE release_year = %s
         """, (year,))
         movies = [models.Movie(*row) for row in cursor.fetchall()]
@@ -148,18 +150,18 @@ def get_movies_by_year(year):
         return movies
 
 
-def get_movies_by_platform(application):
+def get_movies_by_platform(platform_id):
     """Retrieve all movies available on a specific platform."""
     with pool.connection() as conn, conn.cursor() as cursor:
         cursor.execute("""
-            SELECT DISTINCT m.movie_id, m.title_th, m.title_en
-            FROM Movies m
-            JOIN Platforms p ON m.movie_id = p.movie_id
-            WHERE p.%s = 1
-        """, (application,))
+            SELECT DISTINCT m.movie_id, m.title_th, m.title_en 
+            FROM movies m
+            JOIN available a ON m.movie_id = a.movie_id
+            WHERE a.platform_id = %s
+        """, (platform_id),)
         movies = [models.Movie(*row) for row in cursor.fetchall()]
         if not movies:
-            abort(404, description="No movies found for specified application.")
+            abort(404, description="No movies found for specified platform.")
         return movies
 
 
@@ -167,11 +169,16 @@ def get_platforms_for_movie(movie_id):
     """Retrieve all platforms where a specific movie is available."""
     with pool.connection() as conn, conn.cursor() as cursor:
         cursor.execute("""
-            SELECT youtube, 3ch_plus, prime_video, apple_tv, netflix 
-            FROM Platforms 
-            WHERE movie_id = %s
+            SELECT p.platform_id, p.platform_name
+            FROM platforms p
+            JOIN available a ON p.platform_id = a.platform_id
+            WHERE a.movie_id = %s
         """, (movie_id,))
-        platforms = models.Platform(*cursor.fetchone())
+        platform_rows = cursor.fetchall()
+        if not platform_rows:
+            abort(404, description="No platforms found for the specified movie.")
+
+        platforms = [models.Platform(*row) for row in platform_rows]
         return platforms
 
 
@@ -180,8 +187,8 @@ def get_movies_by_gender_age(gender, age):
     with pool.connection() as conn, conn.cursor() as cursor:
         cursor.execute("""
             SELECT DISTINCT m.movie_id, m.title_th, m.title_en
-            FROM Movies m
-            JOIN Responses r ON m.movie_id = r.movie_id
+            FROM movies m
+            JOIN responses r ON m.movie_id = r.movie_id
             WHERE r.gender = %s AND r.age = %s
         """, (gender, age))
         movies = [models.Movie(*row) for row in cursor.fetchall()]

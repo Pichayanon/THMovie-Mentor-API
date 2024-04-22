@@ -26,7 +26,7 @@ paths:
   /movies/{movie_id}:
     get:
       summary: Get information about a specific movie
-      operationId: controller.get_movie_detail
+      operationId: controller.get_movie_information
       parameters:
         - in: path
           name: movie_id
@@ -39,7 +39,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DetailMovie"
+                $ref: "#/components/schemas/MovieInformation"
 
   /movies/actor/{actor_id}:
     get:
@@ -81,13 +81,13 @@ paths:
                 items:
                   $ref: "#/components/schemas/Movie"
 
-  /movies/genre/{genre}:
+  /movies/genre/{genre_id}:
     get:
       summary: Get a list of movies in a specific genre
       operationId: controller.get_movies_by_genre
       parameters:
         - in: path
-          name: genre
+          name: genre_id
           required: true
           schema:
             type: string
@@ -168,13 +168,13 @@ paths:
                 items:
                   $ref: "#/components/schemas/Movie"
 
-  /movies/application/{application}:
+  /movies/application/{platform_id}:
     get:
       summary: Get a list of movies available on a specific platform/application
       operationId: controller.get_movies_by_platform
       parameters:
         - in: path
-          name: application
+          name: platform_id
           required: true
           schema:
             type: string
@@ -188,7 +188,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/Movie"
 
-  /movies/{movie_id}/application:
+  /movies/{movie_id}/platform:
     get:
       summary: Get a list of platforms/applications where a specific movie is available
       operationId: controller.get_platforms_for_movie
@@ -235,66 +235,20 @@ components:
     Genre:
       type: object
       properties:
-        action:
-          type: integer
-          enum: [0, 1]
-        comedy:
-          type: integer
-          enum: [0, 1]
-        drama:
-          type: integer
-          enum: [0, 1]
-        romance:
-          type: integer
-          enum: [0, 1]
-        adventure:
-          type: integer
-          enum: [0, 1]
-        crime:
-          type: integer
-          enum: [0, 1]
-        fantasy:
-          type: integer
-          enum: [0, 1]
-        history:
-          type: integer
-          enum: [0, 1]
-        horror:
-          type: integer
-          enum: [0, 1]
-        mystery:
-          type: integer
-          enum: [0, 1]
-        scifi:
-          type: integer
-          enum: [0, 1]
-        thriller:
-          type: integer
-          enum: [0, 1]
-        other:
-          type: integer
-          enum: [0, 1]
+        genre_id:
+          type: string
+        genre_name:
+          type: string
 
     Platform:
       type: object
       properties:
-        youtube:
-          type: integer
-          enum: [0, 1]
-        3ch_plus:
-          type: integer
-          enum: [0, 1]
-        prime_video:
-          type: integer
-          enum: [0, 1]
-        apple_tv:
-          type: integer
-          enum: [0, 1]
-        netflix:
-          type: integer
-          enum: [0, 1]
+        platform_id:
+          type: string
+        platform_name:
+          type: string
 
-    DetailMovie:
+    MovieInformation:
       type: object
       properties:
         movie_id:
@@ -309,7 +263,12 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Actor"
-        genre:
-          $ref: "#/components/schemas/Genre"
+        genres:
+          type: array
+          items:
+            $ref: "#/components/schemas/Genre"
         platforms:
-          $ref: "#/components/schemas/Platform"
+          type: array
+          items:
+            $ref: "#/components/schemas/Platform"
+
