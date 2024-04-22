@@ -23,14 +23,18 @@ except ModuleNotFoundError:
           " pip install -r requirements.txt")
     sys.exit(1)
 
+
+from flask_cors import CORS
 from swagger_server import encoder
 
 def main():
     app = connexion.App(__name__, specification_dir='./openapi/')
     app.app.json_encoder = encoder.JSONEncoder
+    flask_app = app.app
+    CORS(flask_app)
     app.add_api('th-movie-mentor-api.yaml',
                 arguments={'title': 'TH-Movie Mentor API'}, pythonic_params=True)
-    app.run(port=8080, debug=True)
+    flask_app.run(port=8080, debug=True)
 
 
 if __name__ == '__main__':

@@ -45,7 +45,7 @@ def get_movie_information(movie_id):
             JOIN play p ON p.actor_id = a.actor_id
             WHERE p.movie_id = %s;
         """, (movie_id,))
-        actors = [models.Actor(*actor_data) for actor_data in cursor.fetchall()]
+        actors = [models.Actor(*row) for row in cursor.fetchall()]
 
         cursor.execute("""
             SELECT g.genre_id, g.genre_name
@@ -53,7 +53,7 @@ def get_movie_information(movie_id):
             JOIN moviegenre mg ON g.genre_id = mg.genre_id
             WHERE mg.movie_id = %s;
         """, (movie_id,))
-        genres = [models.Genre(*genre_data) for genre_data in cursor.fetchall()]
+        genres = [models.Genre(*row) for row in cursor.fetchall()]
 
         cursor.execute("""
             SELECT p.platform_id, p.platform_name
@@ -61,10 +61,9 @@ def get_movie_information(movie_id):
             JOIN available a ON p.platform_id = a.platform_id
             WHERE a.movie_id = %s;
         """, (movie_id,))
-        platforms = [models.Platform(*platform_data)
-                     for platform_data in cursor.fetchall()]
+        platforms = [models.Platform(*row) for row in cursor.fetchall()]
 
-        movie_info = models.MovieInformation(
+        movie = models.MovieInformation(
             movie_id=movie_id,
             title_th=title_th,
             title_en=title_en,
@@ -73,7 +72,7 @@ def get_movie_information(movie_id):
             genres=genres,
             platforms=platforms
         )
-        return movie_info
+        return movie
 
 
 def get_movies_by_actor(actor_id):
@@ -193,6 +192,5 @@ def get_movies_by_gender_age(gender, age):
         """, (gender, age))
         movies = [models.Movie(*row) for row in cursor.fetchall()]
         if not movies:
-            abort(
-                404, description=f"No movies found for gender: {gender} and age: {age}.")
+            abort(404, description=f"No movies found for gender: {gender} and age: {age}.")
         return movies
