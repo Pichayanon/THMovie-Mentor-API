@@ -40,7 +40,7 @@ def get_movie_information(movie_id):
         movie_id, title_th, title_en, release_year = movie_data
 
         cursor.execute("""
-            SELECT a.actor_id, a.nickname_th, a.fullname_th, a.nickname_en, a.fullname_en
+            SELECT DISTINCT a.actor_id, a.nickname_th, a.fullname_th, a.nickname_en, a.fullname_en
             FROM actors a
             JOIN play p ON p.actor_id = a.actor_id
             WHERE p.movie_id = %s;
