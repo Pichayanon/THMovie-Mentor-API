@@ -3,7 +3,7 @@ openapi: 3.0.0
 info:
   title: TH-Movie Mentor API
   description: This API provides information about Thai movies including details about specific movies.
-  version: 2.0.0
+  version: 3.0.0
 
 servers:
   - url: http://127.0.0.1:8080/TH-Movie
@@ -23,31 +23,122 @@ paths:
                 items:
                   $ref: "#/components/schemas/Movie"
 
-  /movies/{movie_id}:
+  /movies/{movieId}:
     get:
       summary: Get information about a specific movie
-      operationId: controller.get_movie_information
+      operationId: controller.get_movie_detail
       parameters:
         - in: path
-          name: movie_id
+          name: movieId
           required: true
           schema:
             type: string
       responses:
         "200":
-          description: A movie, including actors and platform availability
+          description: A specific movie
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/MovieInformation"
+                $ref: "#/components/schemas/Movie"
+          links:
+            genres:
+              operationId: controller.get_genres_of_movie
+              parameters:
+                basinId: $response.body#/movieId
+            actors:
+              operationId: controller.get_actors_of_movie
+              parameters:
+                basinId: $response.body#/movieId
+            platforms:
+              operationId: controller.get_platform_of_movie
+              parameters:
+                basinId: $response.body#/movieId
 
-  /movies/actor/{actor_id}:
+  /genresOfMovie/{movieId}:
+    get:
+      summary: Get a list of movies in a specific genre
+      operationId: controller.get_genres_of_movie
+      parameters:
+        - in: path
+          name: movieId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+            description: An array of movies by genre
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/Genre"
+
+  /actorsOfMovie/{movieId}:
+    get:
+      summary: Get a list of actor for specific movie
+      operationId: controller.get_actors_of_movie
+      parameters:
+        - in: path
+          name: movieId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: An array of actor for specific movie
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Actor"
+    
+  /platformsOfMovie/{movieId}:
+      get:
+        summary: Get a list of platforms/applications where a specific movie is available
+        operationId: controller.get_platforms_of_movie
+        parameters:
+          - in: path
+            name: movieId
+            required: true
+            schema:
+              type: string
+        responses:
+          "200":
+            description: A list of platforms/applications for a specific movie
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Platform"
+
+  /movies/genre/{genreId}:
+    get:
+      summary: Get a list of movies in a specific genre
+      operationId: controller.get_movies_by_genre
+      parameters:
+        - in: path
+          name: genreId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: An array of movies by genre
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Movie"
+
+  /movies/actor/{actorId}:
     get:
       summary: Get a list of movies starring a specific actor
       operationId: controller.get_movies_by_actor
       parameters:
         - in: path
-          name: actor_id
+          name: actorId
           required: true
           schema:
             type: string
@@ -59,7 +150,27 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Actor"
+                  $ref: "#/components/schemas/Movie"
+
+  /movies/platform/{platformId}:
+    get:
+      summary: Get a list of movies available on a specific platform
+      operationId: controller.get_movies_by_platform
+      parameters:
+        - in: path
+          name: platformId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: An array of movies available on a specific platform
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Movie"
 
   /movies/year/{year}:
     get:
@@ -74,26 +185,6 @@ paths:
       responses:
         "200":
           description: An array of movies from a specific year
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Movie"
-
-  /movies/genre/{genre_id}:
-    get:
-      summary: Get a list of movies in a specific genre
-      operationId: controller.get_movies_by_genre
-      parameters:
-        - in: path
-          name: genre_id
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: An array of movies by genre
           content:
             application/json:
               schema:
@@ -168,107 +259,44 @@ paths:
                 items:
                   $ref: "#/components/schemas/Movie"
 
-  /movies/application/{platform_id}:
-    get:
-      summary: Get a list of movies available on a specific platform/application
-      operationId: controller.get_movies_by_platform
-      parameters:
-        - in: path
-          name: platform_id
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: An array of movies available on a specific platform/application
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Movie"
-
-  /movies/{movie_id}/platform:
-    get:
-      summary: Get a list of platforms/applications where a specific movie is available
-      operationId: controller.get_platforms_for_movie
-      parameters:
-        - in: path
-          name: movie_id
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: A list of platforms/applications for a specific movie
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Platform"
-
 components:
   schemas:
     Movie:
       type: object
       properties:
-        movie_id:
+        movieId:
           type: string
-        title_th:
+        titleTh:
           type: string
-        title_en:
+        titleEn:
           type: string
 
     Actor:
       type: object
       properties:
-        actor_id:
+        actorId:
           type: string
-        nickname_th:
+        nickNameTh:
           type: string
-        fullname_th:
+        fullNameTh:
           type: string
-        nickname_en:
+        nickNameEn:
           type: string
-        fullname_en:
+        fullNameEn:
+          type: string
+  
+    Platform:
+      type: object
+      properties:
+        platformId:
+          type: string
+        platformName:
           type: string
 
     Genre:
       type: object
       properties:
-        genre_id:
+        genreId:
           type: string
-        genre_name:
+        genreName:
           type: string
-
-    Platform:
-      type: object
-      properties:
-        platform_id:
-          type: string
-        platform_name:
-          type: string
-
-    MovieInformation:
-      type: object
-      properties:
-        movie_id:
-          type: string
-        title_th:
-          type: string
-        title_en:
-          type: string
-        release_year:
-          type: integer
-        actors:
-          type: array
-          items:
-            $ref: "#/components/schemas/Actor"
-        genres:
-          type: array
-          items:
-            $ref: "#/components/schemas/Genre"
-        platforms:
-          type: array
-          items:
-            $ref: "#/components/schemas/Platform"
-
