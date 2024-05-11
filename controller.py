@@ -15,6 +15,7 @@ pool = PooledDB(creator=pymysql,
                 maxconnections=1,
                 blocking=True)
 
+
 def get_movies():
     """Retrieve all movies."""
     with pool.connection() as conn, conn.cursor() as cursor:
@@ -33,10 +34,10 @@ def get_movie_detail(movie_id):
             FROM movies
             WHERE movie_id = %s;
         """, (movie_id,))
-        movie_id, title_th, title_en = cursor.fetchone()
-        movie = models.Movie(movie_id, title_th, title_en)
-        if not movie:
+        movie_row = cursor.fetchone()
+        if not movie_row:
             abort(404, description="Movie not found")
+        movie = models.Movie(*movie_row)
         return movie
 
 
@@ -154,7 +155,7 @@ def get_movies_by_gender_age(gender, age):
         if not movies:
             abort(
                 404, description=f"No movies found for gender: {gender} and age: {age}.")
-        return moviess
+        return movies
     
 def get_movies_by_year(year):
     """Retrieve all movies released in a specific year."""
