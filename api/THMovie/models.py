@@ -19,6 +19,7 @@ class Movie(models.Model):
     title_th = models.CharField(max_length=255)
     title_en = models.CharField(max_length=255)
     release_year = models.IntegerField()
+    type = models.CharField(max_length=255)
 
 
 class Platform(models.Model):
@@ -31,19 +32,16 @@ class MovieGenre(models.Model):
     genre = models.ForeignKey(Genre, on_delete=models.CASCADE)
 
 
-# Relationship between Movies and Platforms
 class Available(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     platform = models.ForeignKey(Platform, on_delete=models.CASCADE)
 
 
-# Actors playing in movies
 class Play(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     actor = models.ForeignKey(Actor, on_delete=models.CASCADE)
 
 
-# Audience responses, assuming a simplified structure
 class Response(models.Model):
     response_id = models.CharField(max_length=100, primary_key=True)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
