@@ -1,0 +1,7 @@
+.card:hover {
+    border-color: #fff; /* White border */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Soft shadow for depth */
+    transform: translateY(-3px); /* Slightly raise the button */
+    transition: all 0.4s ease;
+    cursor: pointer;
+}
