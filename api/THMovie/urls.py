@@ -2,7 +2,7 @@
 from django.urls import path
 from .views import (MovieList, MovieDetail, MoviesByGenre, MoviesByActor, MoviesByPlatform,
                     MoviesByYear, MoviesByAge, MoviesByGender, MoviesByGenderAndAge,
-                    GenresOfMovie, ActorsOfMovie, PlatformsOfMovie)
+                    GenresOfMovie, ActorsOfMovie, PlatformsOfMovie, GenresGenderCounts)
 
 app_name = 'THMovie'
 
@@ -19,4 +19,5 @@ urlpatterns = [
     path('genresOfMovie/<str:movie_id>/', GenresOfMovie.as_view(), name='genres-of-movie'),
     path('actorsOfMovie/<str:movie_id>/', ActorsOfMovie.as_view(), name='actors-of-movie'),
     path('platformsOfMovie/<str:movie_id>/', PlatformsOfMovie.as_view(), name='platforms-of-movie'),
+    path('genres/genderCounts/', GenresGenderCounts.as_view(), name='genres-gender-counts'),
 ]

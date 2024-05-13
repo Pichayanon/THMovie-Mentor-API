@@ -2,7 +2,7 @@
 from django.http import Http404
 from rest_framework import generics
 from .models import Movie, Actor, Genre, Platform
-from .serializers import MovieSerializer, ActorSerializer, GenreSerializer, PlatformSerializer
+from .serializers import MovieSerializer, ActorSerializer, GenreSerializer, PlatformSerializer, GenreGenderCountSerializer
 
 
 class MovieList(generics.ListAPIView):
@@ -114,3 +114,8 @@ class PlatformsOfMovie(generics.ListAPIView):
         if not queryset:
             raise Http404("No movies found for the specified platform.")
         return queryset
+
+
+class GenresGenderCounts(generics.ListAPIView):
+    queryset = Genre.objects.all()
+    serializer_class = GenreGenderCountSerializer

@@ -24,3 +24,14 @@ class PlatformSerializer(serializers.ModelSerializer):
     class Meta:
         model = Platform
         fields = ['platform_id', 'platform_name']
+
+
+class GenreGenderCountSerializer(serializers.ModelSerializer):
+    gender_counts = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Genre
+        fields = ['genre_id', 'genre_name', 'gender_counts']
+
+    def get_gender_counts(self, obj):
+        return obj.gender_counts()

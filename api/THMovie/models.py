@@ -13,6 +13,15 @@ class Genre(models.Model):
     genre_id = models.CharField(max_length=100, primary_key=True)
     genre_name = models.CharField(max_length=255)
 
+    def gender_counts(self):
+        gender_dict = {'male': 0, 'female': 0}
+        movies = Movie.objects.filter(moviegenre__genre=self)
+        responses = Response.objects.filter(movie__in=movies).values('gender').annotate(count=models.Count('gender'))
+        for response in responses:
+            if response['gender'].lower() in gender_dict:
+                gender_dict[response['gender'].lower()] = response['count']
+        return gender_dict
+
 
 class Movie(models.Model):
     movie_id = models.CharField(max_length=100, primary_key=True)
