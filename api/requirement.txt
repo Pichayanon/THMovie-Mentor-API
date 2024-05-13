@@ -1,5 +1,0 @@
-Django
-python-decouple
-djangorestframework
-django-cors-headers
-mysqlclient
