@@ -8,7 +8,7 @@ from selenium.common.exceptions import TimeoutException
 class TestMovieApp:
     def setup_driver(self):
         """Initialize the WebDriver."""
-        self.driver = webdriver.Chrome()  # Adjust if using a different browser
+        self.driver = webdriver.Chrome()
         self.driver.get("http://localhost:3000/")
     
     def teardown_driver(self):
@@ -101,13 +101,13 @@ class TestMovieApp:
         try:
             # Click the first movie card
             first_movie_card = WebDriverWait(self.driver, 10).until(
-                EC.element_to_be_clickable((By.CLASS_NAME, "css-46bh2p-MuiCardContent-root:last-child"))  # Adjust if your actual class name is different
+                EC.element_to_be_clickable((By.CLASS_NAME, "css-46bh2p-MuiCardContent-root:last-child"))
             )
             first_movie_card.click()
 
             # Wait for the popup to become visible
             WebDriverWait(self.driver, 10).until(
-                EC.visibility_of_element_located((By.CLASS_NAME, "popup"))  # Adjust if your actual class name is different
+                EC.visibility_of_element_located((By.CLASS_NAME, "popup"))
             )
 
             # Check the popup text content for key sections
@@ -128,7 +128,7 @@ class TestMovieApp:
         """Test that selecting a genre from the dropdown filters the movies accordingly."""
         self.setup_driver()
         try:
-            self.driver.get("http://localhost:3000/genre")  # Assuming genre filter page URL
+            self.driver.get("http://localhost:3000/genre") 
             genre_select = WebDriverWait(self.driver, 10).until(
                 EC.element_to_be_clickable((By.CLASS_NAME, "genre-select"))  # This matches the genre select dropdown
             )
@@ -148,7 +148,7 @@ class TestMovieApp:
             )
 
             # Verify the displayed movies are related to the selected genre (optional deeper validation could be added here)
-            filtered_results = self.driver.find_elements(By.CLASS_NAME, "css-46bh2p-MuiCardContent-root:last-child")  # Assuming the cards have this class
+            filtered_results = self.driver.find_elements(By.CLASS_NAME, "css-46bh2p-MuiCardContent-root:last-child") 
             assert len(filtered_results) > 0, "No movies displayed after selecting genre."
             print("TC_WEB_006 passed")
         finally:
@@ -163,7 +163,7 @@ class TestMovieApp:
 
             # Find the platform dropdown element
             platform_select = WebDriverWait(self.driver, 10).until(
-                EC.element_to_be_clickable((By.CLASS_NAME, "platform-select"))  # Adjust this selector if needed
+                EC.element_to_be_clickable((By.CLASS_NAME, "platform-select"))
             )
 
             # Select a platform from the dropdown (e.g., Netflix)
@@ -178,7 +178,7 @@ class TestMovieApp:
             )
 
             # Verify the displayed movies are related to the selected platform
-            filtered_results = self.driver.find_elements(By.CLASS_NAME, "css-46bh2p-MuiCardContent-root:last-child")  # Assuming the cards have this class
+            filtered_results = self.driver.find_elements(By.CLASS_NAME, "css-46bh2p-MuiCardContent-root:last-child")
             assert len(filtered_results) > 0, "No movies displayed after selecting platform."
             print("TC_WEB_007 passed")
         finally:
