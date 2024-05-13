@@ -1,0 +1,22 @@
+/* Visualization.css */
+.visualization-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Adjusts columns dynamically */
+    gap: 16px; /* Sets gap between grid items */
+    padding: 20px; /* Adds padding around the grid container */
+}
+
+/* Additional responsiveness and styling */
+@media (max-width: 768px) {
+    .visualization-grid {
+        grid-template-columns: 1fr; /* Single column layout for small screens */
+    }
+}
+
+.visualization-block {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* This will push the h1 to the top and canvas to the bottom */
+    height: 100%; /* Ensures the container takes full height of its parent */
+}
+
