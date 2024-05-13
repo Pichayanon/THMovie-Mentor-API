@@ -57,14 +57,18 @@ function Visualize3() {
 
     return (
         <div className="visualization-block">
-            <div>
+            <div className='title'>
                 <h1>Movie Availability by Platform</h1>
             </div>
-            {platformData.length > 0 ? (
-                <Bar data={chartData} options={options} />
-            ) : (
-                <p>Loading...</p>
-            )}
+            <div className='visualizer'>
+                {platformData.length > 0 ? (
+                    <Bar data={chartData} options={options} />
+                ) : (
+                    <svg className='loading' viewBox="25 25 50 50">
+                        <circle r="20" cy="50" cx="50"></circle>
+                    </svg>
+                )}
+            </div>
         </div>
     );
 }

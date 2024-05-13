@@ -42,14 +42,16 @@ function Visualize4() {
 
     return (
         <div className="visualization-block">
-            <div>
+            <div className='title'>
                 <h1>Percentage of Movie Types</h1>
             </div>
             <div className='charter'>
                 {movieData.length > 0 ? (
                     <Pie data={chartData} />
                 ) : (
-                    <p>Loading...</p>
+                    <svg className='loading' viewBox="25 25 50 50">
+                        <circle r="20" cy="50" cx="50"></circle>
+                    </svg>
                 )}
             </div>
         </div>

@@ -14,10 +14,20 @@ function About() {
                 <Typography gutterBottom variant="h4" component="div">
                     What is Mentor?
                 </Typography>
-                <Typography variant="h6" color="text.secondary">
-                    Mentor is a database service for exploring the popular Thai movies and series.
-
-                    The data we have collected are from the response of the our target group via questionaire.
+                <Typography variant="h5" color="text.primary">
+                    Background
+                </Typography>
+                <Typography>
+                    <br/>
+                    When we want to watch a Thai movie, it is not easy to find one that suits our age or gender. Current websites do not offer recommenders that truly provide good suggestions. Therefore, we are trying to ask the target group about their favorite movies across various ages and genders.
+                </Typography>
+                    <br/>
+                <Typography variant="h5" color="text.primary">
+                    Goals
+                </Typography>
+                <Typography>
+                    <br/>
+                    The goal is to offer a versatile API that enables detailed data access and visualization, facilitating trend analysis and content recommendations within the Thai entertainment industry.
                 </Typography>
             </CardContent>
             </Card>

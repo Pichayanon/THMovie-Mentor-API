@@ -44,14 +44,18 @@ function Visualize1(props) {
 
     return (
         <div className="visualization-block">
-            <div>
+            <div className='title'>
                 <h1>Movie Count by Genre</h1>
             </div>
-            {genreData.length > 0 ? (
-                <Bar data={chartData} options={options} />
-            ) : (
-                <p>Loading...</p>
-            )}
+            <div className='visualizer'>
+                {genreData.length > 0 ? (
+                    <Bar data={chartData} options={options} />
+                ) : (
+                    <svg className='loading' viewBox="25 25 50 50">
+                        <circle r="20" cy="50" cx="50"></circle>
+                    </svg>
+                )}
+            </div>
         </div>
     )
 }

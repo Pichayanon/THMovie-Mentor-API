@@ -7,8 +7,8 @@ import Typography from '@mui/material/Typography';
 
 
 function Popup(props) {
-    const {movie, onPopupClose} = props;
-    const [movieData, setMovieData] = useState([]);
+    const { movie, onPopupClose } = props;
+    const [movieData, setMovieData] = useState(null);
     const [actors, setActors] = useState([]);
     const [genres, setGenres] = useState([]);
     const [platforms, setPlatforms] = useState([]);
@@ -20,55 +20,88 @@ function Popup(props) {
         }
     }, []);
 
+    const fetchData = async (url) => {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Failed to fetch data:', error);
+            return null; // Return null if there's an error
+        }
+    }
+
     useEffect(() => {
-        fetch(`http://127.0.0.1:8000/TH-Movies/movies/${movie}`).then(res => {
-            return res.json();
-        }).then(resJson => {
-            setMovieData(resJson);
-            setActors(resJson.actors);
-            setGenres(resJson.genres);
-            setPlatforms(resJson.platforms);
-        });
+        fetchData(`http://127.0.0.1:8000/TH-Movies/movies/${movie}`)
+            .then(data => {
+                if (data) setMovieData(data);
+            });
+    }, [movie]);
+
+    useEffect(() => {
+        fetchData(`http://127.0.0.1:8000/TH-Movies/genresOfMovie/${movie}`)
+            .then(data => {
+                if (data) setGenres(data);
+            });
+    }, [movie]);
+
+    useEffect(() => {
+        fetchData(`http://127.0.0.1:8000/TH-Movies/actorsOfMovie/${movie}`)
+            .then(data => {
+                if (data) setActors(data);
+            });
+    }, [movie]);
+
+    useEffect(() => {
+        fetchData(`http://127.0.0.1:8000/TH-Movies/platformsOfMovie/${movie}`)
+            .then(data => {
+                if (data) setPlatforms(data);
+            });
     }, [movie]);
 
     return <div className="popup" onClick={onPopupClose}>
-        <Card sx={{ minWidth: 275 }} style={{margin: 80}}>
-            {/* <CardMedia
-                component="img"
-                alt="green iguana"
-                height="300"
-                image="./images/anya-forger-heh copy 2.avif"
-            /> */}
+        <Card sx={{ minWidth: 275 }} style={{ margin: 80}} className="info-card">
             <CardContent>
-                <Typography gutterBottom variant="h4" component="div">
-                    {movieData.title_en}
-                </Typography>
-                <Typography variant="h6" color="text.secondary">
-                    {movieData.title_th} - {movieData.release_year}
-                </Typography>
+                {movieData ? (
+                    <>
+                        <Typography gutterBottom variant="h4" component="div">
+                            {movieData.title_en}
+                        </Typography>
+                        <Typography variant="h6" color="text.secondary">
+                            {movieData.title_th} - {movieData.release_year}
+                        </Typography>
+                    </>
+                ) : (
+                    <Typography gutterBottom variant="h5" component="div">
+                        Loading movie details or movie not found...
+                    </Typography>
+                )}
                 <Typography variant="body1">
                     Top Actors:
-                    {actors.map(actor => (
+                    {actors.length > 0 ? actors.map(actor => (
                         <li key={actor.actor_id}>
                             {actor.fullname_en} ({actor.nickname_en})
                         </li>
-                    ))}
+                    )) : "No actors found."}
                 </Typography>
                 <Typography variant="body1">
                     Genres:
-                    {genres.map(genre => (
+                    {genres.length > 0 ? genres.map(genre => (
                         <li key={genre.genre_id}>
                             {genre.genre_name}
                         </li>
-                    ))}
+                    )) : "No genres found."}
                 </Typography>
                 <Typography variant="body1">
                     Available Platform:
-                    {platforms.map(platform => (
+                    {platforms.length > 0 ? platforms.map(platform => (
                         <li key={platform.platform_id}>
                             {platform.platform_name}
                         </li>
-                    ))}
+                    )) : "No platforms found."}
                 </Typography>
             </CardContent>
         </Card>

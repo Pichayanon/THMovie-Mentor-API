@@ -41,7 +41,7 @@ function GenrePage() {
     const movieElements = movies.filter((item) => {
         return item.title_en.includes(searchText);
     }).map(movie => {
-        return <BasicCard movie={movie} onClick={() => {setGetMovie(movie.movie_id)} }/>
+        return <BasicCard movie={movie} onClick={() => {setGetMovie(movie.movie_id); setIsPopupOpen(true);} }/>
     });
 
 
@@ -49,20 +49,22 @@ function GenrePage() {
         <div className="app">
             <NavBar/>
             <AppSearch value={searchText} onValueChange={setSearchText}/>
-            <select value={genre} onChange={(e) => setGenre(e.target.value)} className="genre-select">
-                <option value="g001">Action</option>
-                <option value="g002">Comedy</option>
-                <option value="g003">Drama</option>
-                <option value="g004">Romance</option>
-                <option value="g005">Adventure</option>
-                <option value="g006">Crime</option>
-                <option value="g007">Fantasy</option>
-                <option value="g008">History</option>
-                <option value="g009">Horror</option>
-                <option value="g010">Mystery</option>
-                <option value="g011">Sci-Fi</option>
-                <option value="g012">Thriller</option>
-            </select>
+            <div className='selector'>
+                <select value={genre} onChange={(e) => setGenre(e.target.value)} className="genre-select">
+                    <option value="g001">Action</option>
+                    <option value="g002">Comedy</option>
+                    <option value="g003">Drama</option>
+                    <option value="g004">Romance</option>
+                    <option value="g005">Adventure</option>
+                    <option value="g006">Crime</option>
+                    <option value="g007">Fantasy</option>
+                    <option value="g008">History</option>
+                    <option value="g009">Horror</option>
+                    <option value="g010">Mystery</option>
+                    <option value="g011">Sci-Fi</option>
+                    <option value="g012">Thriller</option>
+                </select>
+            </div>
             <section className="app-section">
                 <div className="app-container">
                     <div className="app-grid">

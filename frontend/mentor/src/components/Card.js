@@ -11,12 +11,6 @@ export default function BasicCard(props) {
     const { movie, onClick } = props;
     return (
         <Card sx={{ minWidth: 275 }} className='card'>
-            {/* <CardMedia
-                component="img"
-                alt="green iguana"
-                height="140"
-                image="./images/anya-forger-heh copy 2.avif"
-            /> */}
             <CardContent onClick={() => {onClick(movie)}}>
                 <Typography gutterBottom variant="h5" component="div">
                     {movie.title_en}

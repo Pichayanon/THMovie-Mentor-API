@@ -5,31 +5,15 @@ import './Visualization.css';
 
 function Visualize2() {
     const [chartData, setChartData] = useState({});
-    const genders = ['Male', 'Female'];
 
     useEffect(() => {
-        const genreCounts = { Male: {}, Female: {} };
-
-        const fetchMoviesAndGenres = async (gender) => {
-            const movieResponse = await fetch(`http://127.0.0.1:8000/TH-Movies/movies/gender/${gender}/`);
-            const movies = await movieResponse.json();
-
-            for (const movie of movies) {
-                const genresResponse = await fetch(`http://127.0.0.1:8000/TH-Movies/genresOfMovie/${movie.movie_id}/`);
-                const genres = await genresResponse.json();
-                
-                genres.forEach(genre => {
-                    genreCounts[gender][genre.genre_name] = (genreCounts[gender][genre.genre_name] || 0) + 1;
-                });
-            }
-            return genreCounts;
-        };
-
-        Promise.all(genders.map(gender => fetchMoviesAndGenres(gender)))
-            .then(() => {
-                const labels = Array.from(new Set([...Object.keys(genreCounts.Male), ...Object.keys(genreCounts.Female)]));
-                const maleData = labels.map(label => genreCounts.Male[label] || 0);
-                const femaleData = labels.map(label => genreCounts.Female[label] || 0);
+        const fetchGenreCounts = async () => {
+            try {
+                const response = await fetch('http://127.0.0.1:8000/TH-Movies/genres/genderCounts/');
+                const data = await response.json();
+                const labels = data.map(genre => genre.genre_name);
+                const maleData = data.map(genre => genre.gender_counts.male);
+                const femaleData = data.map(genre => genre.gender_counts.female);
 
                 setChartData({
                     labels,
@@ -46,7 +30,13 @@ function Visualize2() {
                         }
                     ]
                 });
-            });
+            } catch (error) {
+                console.error('Failed to fetch data:', error);
+                setChartData({});
+            }
+        };
+
+        fetchGenreCounts();
     }, []);
 
     const options = {
@@ -64,14 +54,18 @@ function Visualize2() {
 
     return (
         <div className="visualization-block">
-            <div>
+            <div className='title'>
                 <h1>Genre Preferences by Gender</h1>
             </div>
-            {chartData.labels ? (
-                <Bar data={chartData} options={options} />
-            ) : (
-                <p>Loading...</p>
-            )}
+            <div className='visualizer'>
+                {chartData.labels ? (
+                    <Bar data={chartData} options={options} />
+                ) : (
+                    <svg className='loading' viewBox="25 25 50 50">
+                        <circle r="20" cy="50" cx="50"></circle>
+                    </svg>
+                )}
+            </div>
         </div>
     );
 }

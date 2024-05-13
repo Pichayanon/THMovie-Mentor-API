@@ -12,14 +12,24 @@ function Contact() {
             <Card sx={{ minWidth: 275 }} style={{margin: 30}}>
                 <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
-                    Here are contact to our devs.
+                    Contact to our developers
                 </Typography>
-                <Typography variant="body1" color="text.secondary">
+                <br/>
+                <Typography variant="h6" color="text.primary">
+                    Devs:
+                </Typography>
+                <Typography variant="body1">
                     Kongkawee Chayarat : 6510545250
                 </Typography>
-                <Typography variant="body1" color="text.secondary">
+                <Typography variant="body1">
                     Pichayanon Toojinda : 6510545624
                 </Typography>
+                <br/>
+                <Typography variant="h6" color="text.primary">
+                    Github of the project:
+                </Typography>
+                <br/>
+                <a href="https://github.com/Pichayanon/THMovie-Mentor-API">THMovie-Mentor</a>
             </CardContent>
             </Card>
         </div>

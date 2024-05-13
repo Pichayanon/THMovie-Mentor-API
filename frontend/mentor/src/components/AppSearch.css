@@ -8,8 +8,28 @@
 .app-search-input {
     border-radius: 10px;
     width: 60%;
-    padding: 8px;
     font-size: 16px;
     box-sizing: border-box;
-    border: 1px solid grey;
+    text-align: center;
+    height: 40px;
+    line-height: 28px;
+    padding: 0 1rem;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    outline: none;
+    background-color: #f3f3f4;
+    color: #0d0c22;
+    transition: .3s ease;
+    
+}
+
+.app-search-input::placeholder {
+    color: #9e9ea7;
+}
+   
+.app-search-input:focus, .app-search-input:hover {
+    outline: none;
+    border-color: rgba(240,43,36,0.4);
+    background-color: #fff;
+    box-shadow: 0 0 0 4px rgb(234 76 137 / 10%);
 }
