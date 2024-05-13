@@ -7,7 +7,7 @@ import AppSearch from './AppSearch';
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
 
-function AgePage() {
+function PlatformPage() {
     const [searchText, setSearchText] = useState('');
     const [movies, setMovies] = useState([]);
     const [age, setAge] = useState(20);
@@ -55,29 +55,10 @@ function AgePage() {
         <div className="app">
             <NavBar />
             <AppSearch value={searchText} onValueChange={setSearchText} />
-            <Box sx={{ width: 300, padding: '20px' }}>
-                <Slider
-                    value={age}
-                    onChange={(event, newValue) => {
-                        setAge(newValue);
-                    }}
-                    aria-labelledby="input-slider"
-                    valueLabelDisplay="auto"
-                    getAriaValueText={valuetext}
-                    min={0}
-                    max={100}
-                />
-            </Box>
-            <section className="app-section">
-                <div className="app-container">
-                    <div className="app-grid">
-                        {movieElements.length > 0 ? movieElements : <div>No movies match your criteria.</div>}
-                    </div>
-                </div>
-                {popup}
-            </section>
+
+
         </div>
     );
 }
 
-export default AgePage;
+export default PlatformPage;

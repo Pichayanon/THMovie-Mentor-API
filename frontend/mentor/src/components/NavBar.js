@@ -77,7 +77,7 @@ function NavBar() {
                     </Typography>
                     <Link to="/" className='homelink'><Typography textAlign="center">Home</Typography></Link>
                     <Link to="/genre" className='genrelink'><Typography textAlign="center">Search by Genre</Typography></Link>
-                    <Link to="/age" className='agelink'><Typography textAlign="center">Search by Age</Typography></Link>
+                    <Link to="/platform" className='platformlink'><Typography textAlign="center">Search by Platform</Typography></Link>
                     <Link to="/visualization" className='visuallink'><Typography textAlign="center">Visualize</Typography></Link>
                 </Toolbar>
             </AppBar>

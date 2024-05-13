@@ -11,6 +11,9 @@
     .visualization-grid {
         grid-template-columns: 1fr; /* Single column layout for small screens */
     }
+    .charter {
+        height: 400px;
+    }
 }
 
 .visualization-block {
@@ -20,3 +23,11 @@
     height: 100%; /* Ensures the container takes full height of its parent */
 }
 
+.charter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    height: 200px;
+}

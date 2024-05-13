@@ -7,7 +7,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import About from './components/About'
 import Contact from './components/Contact'
 import GenrePage from './components/GenrePage'
-import AgePage from './components/AgePage'
+import PlatformPage from './components/PlatformPage'
 import Visualization from './components/Visualization';
 
 
@@ -29,8 +29,8 @@ const router = createBrowserRouter([
       element: <GenrePage />
   },
   {
-      path: "age",
-      element: <AgePage />
+      path: "platform",
+      element: <PlatformPage />
   },
   {
       path: "visualization",

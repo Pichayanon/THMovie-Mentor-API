@@ -38,9 +38,11 @@ function GenrePage() {
         });
     }, [genre]);
 
-    const movieElements = movies.map(movie => (
-        <BasicCard key={movie.movie_id} movie={movie} onClick={() => { setGetMovie(movie.movie_id); setIsPopupOpen(true); }}/>
-    ));
+    const movieElements = movies.filter((item) => {
+        return item.title_en.includes(searchText);
+    }).map(movie => {
+        return <BasicCard movie={movie} onClick={() => {setGetMovie(movie.movie_id)} }/>
+    });
 
 
     return (

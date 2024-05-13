@@ -6,6 +6,11 @@ import Chart from 'chart.js/auto';
 import Visualize1 from './Visualize1';
 import Visualize2 from './Visualize2';
 import Visualize3 from './Visualize3';
+import Visualize4 from './Visualize4';
+import Visualize5 from './Visualize5';
+import Visualize6 from './Visualize6';
+import Visualize7 from './Visualize7';
+import Visualize8 from './Visualize8';
 
 function Visualization() {
     const genres = [
@@ -31,11 +36,11 @@ function Visualization() {
                 <div><Visualize1 genres={genres}/></div>
                 <div><Visualize2 /></div>
                 <div><Visualize3 /></div>
-                <div><Visualize3 /></div>
-                <div><Visualize3 /></div>
-                <div><Visualize3 /></div>
-                <div><Visualize3 /></div>
-                <div><Visualize3 /></div>
+                <div><Visualize4 /></div>
+                {/* <div><Visualize5 /></div>
+                <div><Visualize6 /></div>
+                <div><Visualize7 /></div>
+                <div><Visualize8 /></div> */}
             </div>
         </div>
     );
