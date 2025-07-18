@@ -35,5 +35,6 @@ All project documents are in the [Project Wiki](https://github.com/Pichayanon/TH
 - [API Endpoint](https://github.com/Pichayanon/THMovie-Mentor-API/wiki/API-Endpoint)
 - [API Tesing](https://github.com/Pichayanon/THMovie-Mentor-API/wiki/API-Test)
 - [Web Testing](https://github.com/Pichayanon/THMovie-Mentor-API/wiki/Web-Test)
+- [Testing Report](https://github.com/Pichayanon/THMovie-Mentor-API/wiki/Document)
 
 
